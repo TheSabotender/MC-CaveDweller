@@ -20,6 +20,9 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick() {
+        if(!CaveDweller.sunlightBurns)
+            return;
+
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
         World world = player.getWorld();
         CheckValidPlayer(player, world);

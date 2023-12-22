@@ -11,9 +11,12 @@ public class CaveDweller implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("cave-dweller");
 
+	//TODO move settings to config file, and add a config gui with Cloth Config
+	public static boolean sunlightBurns = true;
 	public static float sunlightBurn = 1;
 	public static int sunlightBurnDuration = 1;
-
+	public static boolean villagersFearPlayers = true;
+	public static int villagerFearLevel = 0;
 	public static int logFrameCount = 30;
 
 	@Override
