@@ -19,7 +19,7 @@ public abstract class ServerPlayerEntityMixin {
     int logFrames;
 
     @Inject(method = "tick", at = @At("HEAD"))
-    protected void tick() {
+    public void tick() {
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
         World world = player.getWorld();
         CheckValidPlayer(player, world);
