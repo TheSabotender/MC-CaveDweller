@@ -39,13 +39,20 @@ public class LivingEntityMixin {
     private void CheckAfraid(LivingEntity entity, ServerPlayerEntity player, World world) {
         if(player.isCreative() || player.isSpectator())
             return;
-
+        
         DimensionType dimType = world.getDimension();
         if(!dimType.natural() || dimType.hasCeiling())
             return;
 
         boolean isSurface = entity.getBlockY() >= world.getSeaLevel() + CaveDweller.villagerFearLevel;
-        if(isSurface) {
+        boolean isDweller = false;
+        for(int i = 0; i < CaveDweller.dwellers.length; i++) {
+            if(player.getName().getString().equals(CaveDweller.dwellers[i])) {
+                isDweller = true;
+                break;
+            }
+        }
+        if(isSurface && isDweller) {
             entity.setAttacker(player);
         }
     }

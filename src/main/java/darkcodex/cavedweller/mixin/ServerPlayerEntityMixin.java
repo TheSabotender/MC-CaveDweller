@@ -33,7 +33,16 @@ public abstract class ServerPlayerEntityMixin {
             return;
 
         DimensionType dimType = world.getDimension();
-        if(dimType.natural() && !dimType.hasCeiling())
+
+        boolean isDweller = false;
+        for(int i = 0; i < CaveDweller.dwellers.length; i++) {
+            if(player.getName().getString().equals(CaveDweller.dwellers[i])) {
+                isDweller = true;
+                break;
+            }
+        }
+
+        if(isDweller && dimType.natural() && !dimType.hasCeiling())
             CheckSurface(player, world);
     }
 
