@@ -1,6 +1,5 @@
 package darkcodex.cavedweller.mixin;
 
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
@@ -9,17 +8,17 @@ import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import darkcodex.cavedweller.CaveDweller;
+import darkcodex.cavedweller.SurfaceDamage;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin {
-
-    DamageSource damageSource = new DamageSource(null);
+public abstract class ServerPlayerEntityMixin {    
     int logFrames;
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tick() {
+    @Inject(method = "tick()V", at = @At("HEAD"))
+    public void tick(CallbackInfo info) {
         if(!CaveDweller.sunlightBurns)
             return;
 
@@ -36,7 +35,7 @@ public abstract class ServerPlayerEntityMixin {
 
         boolean isDweller = false;
         for(int i = 0; i < CaveDweller.dwellers.length; i++) {
-            if(player.getName().getString().equals(CaveDweller.dwellers[i])) {
+            if(player.getName().getString().toLowerCase().equals(CaveDweller.dwellers[i].toLowerCase())) {
                 isDweller = true;
                 break;
             }
@@ -57,10 +56,13 @@ public abstract class ServerPlayerEntityMixin {
         if(visible && time && !isWet) {
             logFrames++;
             if(logFrames > CaveDweller.logFrameCount)
-                player.sendMessageToClient(Text.of("You are exposed to the sky, find shelter!"), false);
+            {
+                player.sendMessageToClient(Text.of("You are exposed to the sky, find shelter!"), true);
+                logFrames = 0;
+            }
 
-            player.damage(damageSource, CaveDweller.sunlightBurn);
-            player.setOnFireFor(CaveDweller.sunlightBurnDuration);
+            //player.damage(SurfaceDamage.source(player.getWorld()), CaveDweller.sunlightBurn);
+            //player.setOnFireFor(CaveDweller.sunlightBurnDuration);
         }
     }
 }
