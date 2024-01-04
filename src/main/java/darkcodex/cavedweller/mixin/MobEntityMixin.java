@@ -2,13 +2,14 @@ package darkcodex.cavedweller.mixin;
 
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+
 import net.minecraft.entity.mob.MobEntity;
-
-
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.entity.ai.goal.EscapeDangerGoal;
+import net.minecraft.entity.ai.goal.GoalSelector;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,7 @@ import darkcodex.cavedweller.CaveDweller;
 
 @Mixin(MobEntity.class)
 public class MobEntityMixin {
-
+    
     @Inject(method = "baseTick()V", at = @At("HEAD"))
     public void baseTick(CallbackInfo info) {
         if(!CaveDweller.villagersFearPlayers)
@@ -31,6 +32,17 @@ public class MobEntityMixin {
 
         if(player != null && entity.canSee(player))
             CheckAfraid(entity, player, world);        
+    }
+
+    @Inject(method = "initGoals()V", at = @At("HEAD"))
+    protected void initGoals(CallbackInfo info) {
+        MobEntity entity = (MobEntity)(Object)this;
+        if(entity instanceof PathAwareEntity)
+        {
+            PathAwareEntity pathEntity = (PathAwareEntity)entity;
+            GoalSelector goalSelector = ((MobEntityAccessor)entity).getGoalSelector();
+            goalSelector.add(1, new EscapeDangerGoal(pathEntity, 1.0));
+        }        
     }
 
     private void CheckAfraid(MobEntity entity, PlayerEntity player, World world) {
@@ -57,9 +69,9 @@ public class MobEntityMixin {
             }
             else if(entity instanceof VillagerEntity)
             {
-                entity.setAttacker(player);   
+                entity.setAttacker(player);
                 entity.setAttacking(player);
-                entity.emitGameEvent(GameEvent.ENTITY_DAMAGE);
+                //entity.emitGameEvent(GameEvent.ENTITY_DAMAGE);
             }               
         }
     }

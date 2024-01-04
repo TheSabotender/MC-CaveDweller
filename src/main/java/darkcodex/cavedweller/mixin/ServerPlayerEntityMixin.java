@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import darkcodex.cavedweller.CaveDweller;
 import darkcodex.cavedweller.SurfaceDamage;
 
+
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {    
     int logFrames;
