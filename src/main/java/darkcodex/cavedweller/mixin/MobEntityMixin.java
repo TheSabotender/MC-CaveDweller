@@ -17,13 +17,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import darkcodex.cavedweller.CaveDweller;
+import darkcodex.cavedweller.Config;
 
 @Mixin(MobEntity.class)
 public class MobEntityMixin {
     
     @Inject(method = "baseTick()V", at = @At("HEAD"))
     public void baseTick(CallbackInfo info) {
-        if(!CaveDweller.villagersFearPlayers)
+        if(!Config.getVillagersFearPlayers())
             return;
 
         MobEntity entity = (MobEntity)(Object)this;
@@ -53,10 +54,10 @@ public class MobEntityMixin {
         if(!dimType.natural() || dimType.hasCeiling())
             return;
 
-        boolean isSurface = entity.getBlockY() >= world.getSeaLevel() + CaveDweller.villagerFearLevel;
+        boolean isSurface = entity.getBlockY() >= world.getSeaLevel() + Config.getVillagerFearLevel();
         boolean isDweller = false;
-        for(int i = 0; i < CaveDweller.dwellers.length; i++) {
-            if(player.getName().getString().toLowerCase().equals(CaveDweller.dwellers[i].toLowerCase())) {
+        for(int i = 0; i < Config.getDwellers().length; i++) {
+            if(player.getName().getString().toLowerCase().equals(Config.getDwellers()[i].toLowerCase())) {
                 isDweller = true;
                 break;
             }
