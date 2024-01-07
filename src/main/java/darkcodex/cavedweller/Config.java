@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.File;
-//FOR debug - lets us open the config file in explorer
-import java.awt.Desktop;
 /**
  * The Config class manages a set of configuration properties.
  * It provides methods to load and save the configuration,
